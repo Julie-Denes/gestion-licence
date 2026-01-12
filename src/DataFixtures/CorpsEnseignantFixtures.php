@@ -18,7 +18,7 @@ class CorpsEnseignantFixtures extends Fixture
             ['nom' => 'Petit', 'prenom' => 'Sophie', 'email' => 'sophie.petit@example.com', 'nbHeure' => 25.0],
         ];
 
-        foreach ($enseignants as $data) {
+        foreach ($enseignants as $i => $data) {
             $enseignant = new CorpsEnseignant();
             $enseignant->setNom($data['nom']);
             $enseignant->setPrenom($data['prenom']);
@@ -26,6 +26,8 @@ class CorpsEnseignantFixtures extends Fixture
             $enseignant->setNbHeure($data['nbHeure']);
 
             $manager->persist($enseignant);
+
+            $this->addReference('enseignant_' . ($i + 1), $enseignant);
         }
 
         $manager->flush();

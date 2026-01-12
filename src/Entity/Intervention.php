@@ -17,7 +17,7 @@ class Intervention
     #[ORM\Column]
     private string $titre;
 
-    #[ORM\Column]
+    #[ORM\Column(type:'datetime')]
     private \DateTimeInterface $dateDebut;
 
     #[ORM\Column(type:'datetime')]

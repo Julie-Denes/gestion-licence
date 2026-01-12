@@ -18,11 +18,11 @@ class AnneeScolaireFixtures extends Fixture
             ['nom' => '2026-2027', 'dateDebut' => '2026-09-01', 'dateFin' => '2027-06-30'],
         ];
 
-        foreach ($annees as $data) {
+        foreach ($annees as $i => $data) {
             $annee = new AnneeScolaire();
             $annee->setNom($data['nom']);
-            $annee->setDateDebut(new \DateTime($data['dateDebut']));
-            $annee->setDateFin(new \DateTime($data['dateFin']));
+            $annee->setDateDebut(new \DateTimeImmutable($data['dateDebut']));
+            $annee->setDateFin(new \DateTimeImmutable($data['dateFin']));
 
             // Ajout de 1 à 3 périodes de cours par année
             $periodesData = [
@@ -33,8 +33,8 @@ class AnneeScolaireFixtures extends Fixture
 
             foreach ($periodesData as $periodeDates) {
                 $coursPeriode = new CoursPeriode();
-                $coursPeriode->setDateDebut(new \DateTime($periodeDates[0]));
-                $coursPeriode->setDateFin(new \DateTime($periodeDates[1]));
+                $coursPeriode->setDateDebut(new \DateTimeImmutable($periodeDates[0]));
+                $coursPeriode->setDateFin(new \DateTimeImmutable($periodeDates[1]));
                 $coursPeriode->setAnneeScolaire($annee);
 
                 $manager->persist($coursPeriode);

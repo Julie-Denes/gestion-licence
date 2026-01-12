@@ -13,10 +13,10 @@ class CoursPeriode
     private int $id;
 
     #[ORM\Column(type: 'date')]
-    private Date $dateDebut;
+    private \DateTimeImmutable $dateDebut;
 
     #[ORM\Column(type: 'date')]
-    private Date $dateFin;
+    private \DateTimeImmutable $dateFin;
 
     #[ORM\ManyToOne(inversedBy: 'coursPeriodes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -27,23 +27,23 @@ class CoursPeriode
         return $this->id;
     }
 
-    public function getDateDebut(): ?Date
+    public function getDateDebut(): ?\DateTimeImmutable
     {
         return $this->dateDebut;
     }
 
-    public function getDateFin(): ?Date
+    public function getDateFin(): ?\DateTimeImmutable
     {
         return $this->dateFin;
     }
 
-    public function setDateDebut(Date $dateDebut): self
+    public function setDateDebut(\DateTimeImmutable $dateDebut): self
     {
         $this->dateDebut = $dateDebut;
         return $this;
     }
 
-    public function setDateFin(Date $dateFin): self
+    public function setDateFin(\DateTimeImmutable $dateFin): self
     {
         $this->dateFin = $dateFin;
         return $this;

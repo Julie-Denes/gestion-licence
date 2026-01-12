@@ -55,13 +55,13 @@ class CorpsEnseignant
         return $this;
     }
 
-    public function setPrenom(string $prenom): ?self
+    public function setPrenom(string $prenom): self
     {
         $this->prenom = $prenom;
         return $this;
     }
 
-    public function setEmail(string $semail): ?self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
         return $this;

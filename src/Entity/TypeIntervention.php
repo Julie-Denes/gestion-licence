@@ -53,4 +53,10 @@ class TypeIntervention
         $this->description = $description;
         return $this;
     }
+
+    public function setCouleur(string $couleur): self 
+    {
+        $this->couleur = $couleur;
+        return $this;
+    }
 }
