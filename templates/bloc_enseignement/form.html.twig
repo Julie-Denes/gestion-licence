@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un bloc d’enseignement{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Modifier un bloc d’enseignement</h1>
+
+    {{ form_start(form) }}
+
+        {# Rendre le code et le nom en readonly #}
+        <div class="mb-3">
+            {{ form_label(form.code) }}
+            {{ form_widget(form.code, {'attr': {'readonly': 'readonly', 'class': 'form-control'}}) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom, {'attr': {'readonly': 'readonly', 'class': 'form-control'}}) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.nbHeure) }}
+            {{ form_widget(form.nbHeure, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <div class="mt-3 d-flex justify-content-between">
+            <a href="{{ path('bloc_enseignement_list') }}" class="btn btn-secondary">Retour à la liste</a>
+            <button class="btn btn-primary">Enregistrer les modifications</button>
+        </div>
+
+    {{ form_end(form) }}
+
+</div>
+{% endblock %}

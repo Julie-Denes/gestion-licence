@@ -63,7 +63,7 @@ class ModuleFixtures extends Fixture implements DependentFixtureInterface
             $module->setDescription($data['description']);
             $module->setNbHeure($data['nbHeure']);
             $module->setProjetFilRouge($data['projetFilRouge']);
-            $module->setBlocEnseignement($this->getReference($data['blocRef'], blocEnseignement::class));
+            $module->setBlocEnseignement($this->getReference($data['blocRef'], BlocEnseignement::class));
 
             $manager->persist($module);
             $this->addReference('module_' . $data['code'], $module);

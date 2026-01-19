@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 class Module
@@ -31,6 +33,9 @@ class Module
     #[ORM\ManyToOne(inversedBy: 'module')]
     #[ORM\JoinColumn(nullable: false)]
     private ?BlocEnseignement $blocEnseignement = null;
+
+    #[ORM\ManyToMany(targetEntity: CorpsEnseignant::class, mappedBy: 'modules')]
+    private Collection $corpsEnseignants;
 
      public function getId(): ?int
     {
@@ -100,6 +105,38 @@ class Module
     public function setBlocEnseignement(?BlocEnseignement $blocEnseignement): self
     {
         $this->blocEnseignement = $blocEnseignement;
+        return $this;
+    }
+
+    public function __construct()
+    {
+        $this->corpsEnseignants = new ArrayCollection();
+    }
+
+    /**
+    * @return Collection<int, CorpsEnseignant>
+    */
+    public function getCorpsEnseignants(): Collection
+    {
+        return $this->corpsEnseignants;
+    }
+
+    public function addCorpsEnseignant(CorpsEnseignant $enseignant): self
+    {
+        if (!$this->corpsEnseignants->contains($enseignant)) {
+            $this->corpsEnseignants->add($enseignant);
+            $enseignant->addModule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCorpsEnseignant(CorpsEnseignant $enseignant): self
+    {
+        if ($this->corpsEnseignants->removeElement($enseignant)) {
+            $enseignant->removeModule($this);
+        }
+
         return $this;
     }
 

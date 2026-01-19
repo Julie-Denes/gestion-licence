@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity]
 class CorpsEnseignant
@@ -23,6 +25,11 @@ class CorpsEnseignant
 
     #[ORM\Column]
     private float $nbHeure;
+
+    #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'corpsEnseignants')]
+    #[ORM\JoinTable(name: 'enseignant_module')]
+    private Collection $modules;
+
 
     public function getId(): ?int
     {
@@ -70,6 +77,34 @@ class CorpsEnseignant
     public function setNbHeure(float $nbHeure): self
     {
         $this->nbHeure = $nbHeure;
+        return $this;
+    }
+
+    public function __construct()
+    {
+        $this->modules = new ArrayCollection();
+    }
+
+    /**
+    * @return Collection<int, Module>
+    */
+    public function getModules(): Collection
+    {
+        return $this->modules;
+    }
+
+    public function addModule(Module $module): self
+    {
+        if (!$this->modules->contains($module)) {
+            $this->modules->add($module);
+        }
+
+        return $this;
+    }
+
+    public function removeModule(Module $module): self
+    {
+        $this->modules->removeElement($module);
         return $this;
     }
 }
