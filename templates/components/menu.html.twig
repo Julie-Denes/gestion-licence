@@ -1,0 +1,51 @@
+{% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/components/menu.css') }}">
+    {% endblock %}
+<div class="sidebar">
+    <div class="sidebar-content">
+        <div class="logo">
+            <img src="{{ asset('media/logosv.png') }}" alt="Logo" style="width: 10%; height: auto; margin-bottom: 20px;">
+            <div class="nom-lycee">
+            <h2>Lycée Saint-Vincent</h2>
+            <p>Enseignement Supérieur</p>
+            </div>
+        </div>
+
+        <p>MENU</p>
+        <a href="{{ path('home') }}" class="menu-link">
+        <img src="{{ asset('media/icons/calendrierbleu.png') }}" alt="Calendrier" style="width: 20px; height: auto; margin-right: 10px;" data-hover="{{ asset('media/icons/calendrierblanc.png') }}" >Calendrier</a>
+
+        <a href="#" class="menu-link"><img src="{{ asset('media/icons/interventionbleu.png') }}" alt="Interventions" style="width: 20px; height: auto; margin-right: 10px;" data-hover="{{ asset('media/icons/interventionblanc.png') }}">Interventions</a>
+        <a href="#" class="menu-link"><img src="{{ asset('media/icons/proftableaubleu.png') }}" alt="Corps enseignant" style="width: 20px; height: auto; margin-right: 10px;" data-hover="{{ asset('media/icons/proftableaublanc.png') }}">Corps enseignant</a>
+
+
+        <p>PARAMÉTRAGE</p>
+        <a href="#" class="menu-link"><img src="{{ asset('media/icons/puzzlebleu.png') }}" alt="Modules" style="width: 20px; height: auto; margin-right: 10px;" data-hover="{{ asset('media/icons/puzzleblanc.png') }}">Modules</a>
+        <a href="#" class="menu-link"><img src="{{ asset('media/icons/blocprofbleu.png') }}" alt="Blocs d'enseignement" style="width: 20px; height: auto; margin-right: 10px;" data-hover="{{ asset('media/icons/blocprofblanc.png') }}">Blocs d'enseignement</a>
+        <a href="#" class="menu-link"><img src="{{ asset('media/icons/scolairebleu.png') }}" alt="Années scolaire" style="width: 20px; height: auto; margin-right: 10px;" data-hover="{{ asset('media/icons/scolaireblanc.png') }}">Années scolaire</a>
+        <a href="#" class="menu-link"><img src="{{ asset('media/icons/typeinterventionbleu.png') }}" alt="Types d'interventions" style="width: 20px; height: auto; margin-right: 10px;" data-hover="{{ asset('media/icons/typeinterventionblanc.png') }}">Types d'interventions</a>
+    </div>
+
+    <div class="user-info">
+        <img src="{{ asset('media/icons/stella.png') }}" alt="icon">
+        <div class="user-details">
+            <p style="color: black; font-weight: bold;">Stella Ribas</p>
+            <p>Administrateur</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('.menu-link img').forEach(icon => {
+    const original = icon.src;
+    const hover = icon.dataset.hover;
+
+    icon.parentElement.addEventListener('mouseenter', () => {
+        icon.src = hover;
+    });
+
+    icon.parentElement.addEventListener('mouseleave', () => {
+        icon.src = original;
+    });
+});
+</script>

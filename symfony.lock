@@ -34,7 +34,7 @@
             "./src/DataFixtures/AppFixtures.php"
         ]
     },
-    "doctrine/doctrine-migrations-bundle": {
+    "doctrine/doctrine-migrations-bundle": {HEAD
         "version": "3.7",
         "recipe": {
             "repo": "github.com/symfony/recipes",

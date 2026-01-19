@@ -1,0 +1,116 @@
+/* =========================
+   SIDEBAR
+========================= */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #F0F2F7;
+    color: #7988A4;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================
+   CONTENU PRINCIPAL
+========================= */
+.sidebar-content {
+    flex: 1;
+}
+
+/* =========================
+   LOGO
+========================= */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.logo img {
+    width: 40px;
+}
+
+.nom-lycee h2 {
+    font-size: 16px;
+    margin: 0;
+    color: #28416C;
+}
+
+.nom-lycee p {
+    font-size: 12px;
+    margin: 0;
+}
+
+/* =========================
+   TITRES MENU
+========================= */
+.sidebar p {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 20px 0 10px;
+    color: #9AA7BE;
+}
+
+/* =========================
+   LIENS MENU
+========================= */
+.menu-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 15px;
+    margin-bottom: 5px;
+
+    color: #7988A4;
+    text-decoration: none;
+    border-radius: 15px;
+
+    transition: background-color 0.2s ease, padding-left 0.2s ease;
+}
+
+.menu-link img {
+    width: 20px;
+    height: auto;
+}
+
+/* Hover */
+.menu-link:hover {
+    background-color: #28416C;
+    color: white;
+    padding-left: 20px;
+}
+
+/* =========================
+   USER INFO (EN BAS)
+========================= */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom:50px;
+    padding-top: 15px;
+    border-top: 1px solid #D6DBE5;
+}
+
+.user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.user-details p {
+    margin: 0;
+    
+}
+
+.user-details p:last-child {
+    font-size: 11px;
+    color: #9AA7BE;
+}

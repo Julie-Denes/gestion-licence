@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - ArtCraft Boutique{% endblock %}
+
+
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('components/menu.css') }}">
+{% endblock %}
+    
+{% block body %}
+    {% include 'components/menu.html.twig' %}
+
+    <div style="margin-left: 270px; padding: 20px;">
+        <h1>Bienvenue sur la boutique</h1>
+        <p>Contenu principal ici.</p>
+    </div>
+{% endblock %}
