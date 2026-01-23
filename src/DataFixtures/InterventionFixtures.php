@@ -53,6 +53,7 @@ class InterventionFixtures extends Fixture implements DependentFixtureInterface
             // Lier tous les enseignants
             foreach ($enseignants as $enseignant) {
                 $intervention->addCorpsEnseignant($enseignant);
+                $enseignant->addIntervention($intervention);
             }
 
             $manager->persist($intervention);

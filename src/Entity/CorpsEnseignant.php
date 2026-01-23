@@ -30,6 +30,9 @@ class CorpsEnseignant
     #[ORM\JoinTable(name: 'enseignant_module')]
     private Collection $modules;
 
+    #[ORM\ManyToMany(targetEntity: Intervention::class, mappedBy: 'corpsEnseignants')]
+    private Collection $interventions;
+
 
     public function getId(): ?int
     {
@@ -83,6 +86,7 @@ class CorpsEnseignant
     public function __construct()
     {
         $this->modules = new ArrayCollection();
+        $this->interventions = new ArrayCollection();
     }
 
     /**
@@ -105,6 +109,33 @@ class CorpsEnseignant
     public function removeModule(Module $module): self
     {
         $this->modules->removeElement($module);
+        return $this;
+    }
+    
+    /**
+    * @return Collection<int, Intervention>
+    */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): self
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->addCorpsEnseignant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): self
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            $intervention->removeCorpsEnseignant($this);
+        }
+
         return $this;
     }
 }

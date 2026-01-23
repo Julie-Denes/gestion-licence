@@ -37,6 +37,13 @@ class Module
     #[ORM\ManyToMany(targetEntity: CorpsEnseignant::class, mappedBy: 'modules')]
     private Collection $corpsEnseignants;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'enfants')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?self $parent = null;
+
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    private Collection $enfants;
+
      public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +77,11 @@ class Module
     public function getBlocEnseignement(): ?BlocEnseignement
     {
         return $this->blocEnseignement;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
     }
 
     public function setCode(int $code): self
@@ -108,9 +120,46 @@ class Module
         return $this;
     }
 
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Module>
+     */
+    public function getEnfants(): Collection
+    {
+        return $this->enfants;
+    }
+
+    public function addEnfant(self $enfant): self
+    {
+        if (!$this->enfants->contains($enfant))
+        {
+            $this->enfants->add($enfants);
+            $enfant->setParent($this);
+        }
+        return $this;
+    }
+
+    public function removeEnfant(self $enfant): self
+    {
+        if ($this->enfants->removeElement($enfant))
+        {
+            if ($enfant->getParent() === $this) 
+            {
+                $enfant->setParent(null);
+            }
+        }
+        return $this;
+    }
+
     public function __construct()
     {
         $this->corpsEnseignants = new ArrayCollection();
+        $this->enfants = new ArrayCollection();
     }
 
     /**
