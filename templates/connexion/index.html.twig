@@ -1,12 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Connexion{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('components/boutons.css') }}">
+{% endblock %}
 
 {% block body %}
 <div class="login-container">
     <form method="post" action="{{ path('app_login')}}">
 
-        <h1>Connexion</h1>
+        <h1>Connexion au portail</h1>
 
         {% if error %}
             <div class="error">
@@ -14,7 +17,7 @@
             </div>
         {% endif %}
 
-        <label for="email">Email</label>
+        <label for="email">Email - champ obligatoire</label>
         <input
             type="email"
             name="_username"
@@ -24,7 +27,7 @@
             autofocus
         >
 
-        <label for="password">Mot de passe</label>
+        <label for="password">Mot de passe - champ obligatoire</label>
         <input
             type="password"
             name="_password"
@@ -36,7 +39,7 @@
                value="{{ csrf_token('authenticate') }}"
         >
 
-        <button type="submit">Se connecter</button>
+        <button class="btn-bleu" type="submit">Accéder au portail</button>
     </form>
 </div>
 {% endblock %}
