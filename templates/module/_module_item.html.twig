@@ -1,0 +1,18 @@
+<li style="margin-left: {{ niveau * 20 }}px;">
+    <div class="d-flex align-items-center justify-content-between mb-1">
+        <div>
+            <strong>{{ module.code }}</strong> — {{ module.description }} ({{ module.nbHeure }}h) 
+        </div>
+        <div>
+            <a href="{{ path('module_edit', {'id': module.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+        </div>
+    </div>
+
+    {% if module.enfants is not empty %}
+        <ul class="list-unstyled">
+            {% for enfants in module.enfants %}
+                {% include 'module/_module_item.html.twig' with { 'module': enfants, 'niveau': niveau + 1 } %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>

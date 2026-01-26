@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des modules{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4">Liste des modules</h1>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ path('module_add') }}" class="btn btn-success">+ Ajouter un module</a>
+    </div>
+
+    {% for blocNom, modules in modulesParBloc %}
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                {{ blocNom }}
+            </div>
+            <div class="card-body">
+                {% set parents = modules|filter(m => m.parent is null) %}
+                {% if parents is empty %}
+                    <p class="text-muted">Aucun module dans ce bloc.</p>
+                {% else %}
+                    <ul class="list-unstyled">
+                        {% for module in parents %}
+                            {% include 'module/_module_item.html.twig' with { 'module': module, 'niveau': 0 } %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted text-center">Aucun bloc d’enseignement trouvé.</p>
+    {% endfor %}
+</div>
+{% endblock %}

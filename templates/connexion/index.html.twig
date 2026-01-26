@@ -7,7 +7,7 @@
 
 {% block body %}
 <div class="login-container">
-    <form method="post">
+    <form method="post" action="{{ path('app_login')}}">
 
         <h1>Connexion au portail</h1>
 
@@ -20,8 +20,8 @@
         <label for="email">Email - champ obligatoire</label>
         <input
             type="email"
-            name="email"
-            id="email"
+            name="_username"
+            id="username"
             value="{{ last_username }}"
             required
             autofocus
@@ -30,7 +30,7 @@
         <label for="password">Mot de passe - champ obligatoire</label>
         <input
             type="password"
-            name="password"
+            name="_password"
             id="password"
             required
         >

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ editMode ? 'Modifier un type d’intervention' : 'Créer un type d’intervention' }}
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>{{ editMode ? 'Modifier un type d’intervention' : 'Créer un type d’intervention' }}</h1>
+
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="mt-3 d-flex justify-content-between">
+                <a href="{{ path('type_intervention_list') }}" class="btn btn-secondary">Retour à la liste</a>
+                <button class="btn btn-primary">
+                    {{ editMode ? 'Enregistrer les modifications' : 'Créer' }}
+                </button>
+            </div>
+        {{ form_end(form) }}
+
+        {% if editMode %}
+            <hr>
+            <form method="post"
+                  action="{{ path('type_intervention_delete', {'id': form.vars.value.id}) }}"
+                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce type d’intervention ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ form.vars.value.id) }}">
+                <button class="btn btn-rouge">Supprimer</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
+
