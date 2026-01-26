@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Années scolaires{% endblock %}
+{% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/components/menu.css') }}">
+        <link rel="stylesheet" href="{{ asset('styles/anneescolaire.css') }}">
+    {% endblock %}
+
+{% block body %}
+
+
+<div class="page-container">
+
+    <div class="page-header">
+        <div>
+            <h1>Années scolaire</h1>
+            <p class="description">
+                Les années scolaires permettent de garder en mémoire les interventions réalisées sur les années antérieures.
+                La dernière période de cours sur l’année permet de déterminer la fin de l’année. Lorsque cette dernière période de cours est passée,
+                le programme passe automatiquement à l’année suivante (prochaine saison).
+            </p>
+        </div>
+
+        <a href="#" class="btn-primary">
+            Ajouter une année
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="table-header">
+            <span>Année promotion</span>
+            <span>Saison</span>
+            <span></span>
+        </div>
+
+        {% for annee in annees %}
+            <div class="table-row">
+                <span>{{ annee.promotion }}</span>
+                <span>{{ annee.saison }}</span>
+                <span>
+                    <a href="{{ path('promotion_show', { annee: annee.promotion }) }}">
+                    👁 Accéder à la fiche
+                    </a>
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
