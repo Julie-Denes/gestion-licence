@@ -51,8 +51,15 @@ class ModuleType extends AbstractType
                 'required' => false,
                 // on évite qu’un module soit parent de lui-même
                 'query_builder' => function ($repo) use ($options) {
-                    return $repo->createQueryBuilder('m')
+                    $qb = $repo->createQueryBuilder('m')
                         ->orderBy('m.code', 'ASC');
+
+                    if (!empty($options['data']) && $options['data']->getId() !== null) {
+                        $qb->andWhere('m.id != :current')
+                        ->setParameter('current', $options['data']->getId());
+                    }
+
+                    return $qb;
                 },
             ]);
     }
