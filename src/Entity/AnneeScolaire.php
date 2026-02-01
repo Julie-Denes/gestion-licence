@@ -1,11 +1,12 @@
 <?php
 namespace App\Entity;
 
+use App\Repository\AnneeScolaireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity (repositoryClass: AnneeScolaireRepository::class)  ] 
 class AnneeScolaire
 {
     #[ORM\Id]
@@ -16,11 +17,11 @@ class AnneeScolaire
     #[ORM\Column]
     private string $nom;
 
-    #[ORM\Column(type:'date')]
-    private ?\DateTimeImmutable $dateDebut;
+    #[ORM\Column(type: 'date')]
+    private ?\DateTimeInterface $dateDebut = null;
 
-    #[ORM\Column(type:'date')]
-    private ?\DateTimeImmutable $dateFin;
+    #[ORM\Column(type: 'date')]
+    private ?\DateTimeInterface $dateFin = null;
 
     #[ORM\OneToMany(mappedBy: 'anneeScolaire', targetEntity: CoursPeriode::class)]
     private Collection $coursPeriodes;
@@ -40,14 +41,26 @@ class AnneeScolaire
         return $this->nom;
     }
 
-    public function getDateDebut(): ?\DateTimeImmutable
+    public function getDateDebut(): ?\DateTimeInterface
     {
         return $this->dateDebut;
     }
 
-    public function getDateFin(): ?\DateTimeImmutable
+    public function setDateDebut(\DateTimeInterface $dateDebut): self
+    {
+        $this->dateDebut = $dateDebut;
+        return $this;
+    }
+
+    public function getDateFin(): ?\DateTimeInterface
     {
         return $this->dateFin;
+    }
+
+    public function setDateFin(\DateTimeInterface $dateFin): self
+    {
+        $this->dateFin = $dateFin;
+        return $this;
     }
 
     public function setNom(string $nom): self
@@ -56,17 +69,6 @@ class AnneeScolaire
         return $this;
     }
 
-    public function setDateDebut(\DateTimeImmutable $dateDebut): self
-    {
-        $this->dateDebut = $dateDebut;
-        return $this;
-    }
-
-    public function setDateFin(\DateTimeImmutable $dateFin): self
-    {
-        $this->dateFin = $dateFin;
-        return $this;
-    }
 
     /** @return Collection<int, CoursPeriode */
     public function getCoursPeriodes(): Collection

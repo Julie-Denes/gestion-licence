@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PromotionController extends AbstractController
 {
-    #[Route('/annees-scolaires/annee', name: 'promotion_show')]
+    #[Route('/annees-scolaires/{annee}', name: 'promotion_show')]
     public function show(int $annee): Response
     {
         // Données (BDD plus tard)
@@ -32,7 +32,7 @@ class PromotionController extends AbstractController
             ],
         ];
 
-        return $this->render('promotion/show.html.twig', [
+        return $this->render('promotion/promotion.html.twig', [
             'promotion' => $promotion,
             'semaines' => $semaines
         ]);

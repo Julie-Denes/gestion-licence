@@ -35,16 +35,18 @@
         </div>
 
         {% for annee in annees %}
-            <div class="table-row">
-                <span>{{ annee.promotion }}</span>
-                <span>{{ annee.saison }}</span>
-                <span>
-                    <a href="{{ path('promotion_show', { annee: annee.promotion }) }}">
-                    👁 Accéder à la fiche
-                    </a>
-                </span>
-            </div>
-        {% endfor %}
+    <div class="table-row">
+        <span>{{ annee.nom }}</span>
+        <span>
+            {{ annee.dateDebut|date('Y') }} - {{ annee.dateFin|date('Y') }}
+        </span>
+        <span>
+            <a href="{{ path('promotion_show', { annee: annee.id }) }}">
+                👁 Accéder à la fiche
+            </a>
+        </span>
+    </div>
+{% endfor %}
     </div>
 
 </div>
