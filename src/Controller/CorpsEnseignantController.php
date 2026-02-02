@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\CorpsEnseignantRepository;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
@@ -17,30 +18,13 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 class CorpsEnseignantController extends AbstractController
 {
     #[Route('/', name: 'list')]
-    public function list(Request $request, EntityManagerInterface $entityManager): Response
+    public function list(Request $request, CorpsEnseignantRepository $corpsEnseignantRepository): Response
     {
         $filtreNom = $request->query->get('filtreNom', '');
         $filtrePrenom = $request->query->get('filtrePrenom', '');
         $filtreEmail = $request->query->get('filtreEmail', '');
-        
-        $queryBuilder = $entityManager->getRepository(CorpsEnseignant::class)->createQueryBuilder('t');
 
-        if (!empty($filtreNom)) {
-            $queryBuilder->andWhere('LOWER(t.nom) LIKE :filtreNom')
-                        ->setParameter('filtreNom', '%' . strtolower($filtreNom) . '%');
-        }
-
-        if (!empty($filtrePrenom)) {
-            $queryBuilder->andWhere('LOWER(t.prenom) LIKE :filtrePrenom')
-                        ->setParameter('filtrePrenom', '%'. strtolower($filtrePrenom) . '%');
-        }
-
-        if (!empty($filtreEmail)) {
-            $queryBuilder->andWhere('LOWER(t.email) LIKE :filtreEmail')
-                        ->setParameter('filtreEmail', '%'. strtolower($filtreEmail) . '%');
-        }
-
-        $enseignants = $queryBuilder->getQuery()->getResult();
+        $enseignants = $corpsEnseignantRepository->findByFilters($filtreNom, $filtrePrenom, $filtreEmail);
 
         return $this->render('corps_enseignant/index.html.twig', [
             'enseignants' => $enseignants,
@@ -51,7 +35,7 @@ class CorpsEnseignantController extends AbstractController
     }
 
     #[Route('/add', name: 'add')]
-    public function add(Request $request, EntityManagerInterface $em): Response
+    public function add(Request $request, CorpsEnseignantRepository $corpsEnseignantRepository): Response
     {
         $corpsEnseignant = new CorpsEnseignant();
         $form = $this->createForm(CorpsEnseignantType::class, $corpsEnseignant);
@@ -59,8 +43,7 @@ class CorpsEnseignantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($corpsEnseignant);
-            $em->flush();
+            $corpsEnseignantRepository->save($corpsEnseignant, true);
 
             $this->addFlash('success', 'Enseignant ajouter avec succès !');
 
@@ -74,15 +57,14 @@ class CorpsEnseignantController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit')]
-    public function edit(CorpsEnseignant $corpsEnseignant, Request $request, EntityManagerInterface $em): Response
+    public function edit(CorpsEnseignant $corpsEnseignant, Request $request, CorpsEnseignantRepository $corpsEnseignantRepository): Response
     {
         $form = $this->createForm(CorpsEnseignantType::class, $corpsEnseignant);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($corpsEnseignant);
-            $em->flush();
+            $corpsEnseignantRepository->save($corpsEnseignant, true);
 
             $this->addFlash('success', 'Enseignant modifié avec succès !');
 
@@ -99,11 +81,10 @@ class CorpsEnseignantController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
-    public function delete(CorpsEnseignant $corpsEnseignant, EntityManagerInterface $em, Request $request): Response
+    public function delete(CorpsEnseignant $corpsEnseignant, CorpsEnseignantRepository $corpsEnseignantRepository, Request $request): Response
     {
         if ($this->isCsrfTokenValid('delete' . $corpsEnseignant->getId(), $request->request->get('_token'))) {
-            $em->remove($corpsEnseignant);
-            $em->flush();
+            $corpsEnseignantRepository->remove($corpsEnseignant, true);
 
             $this->addFlash('success', 'Enseignant supprimé avec succès.');
         } else {

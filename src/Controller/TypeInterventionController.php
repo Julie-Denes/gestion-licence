@@ -9,23 +9,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\TypeInterventionRepository;
 
 #[Route('/type-intervention', name: 'type_intervention_')]
 class TypeInterventionController extends AbstractController
 {
     #[Route('/', name: 'list')]
-    public function list(Request $request, EntityManagerInterface $entityManager): Response
+    public function list(Request $request, TypeInterventionRepository $typeInterventionRepository): Response
     {
         $filtre = $request->query->get('filtre', '');
         
-        $queryBuilder = $entityManager->getRepository(TypeIntervention::class)->createQueryBuilder('t');
-
-        if (!empty($filtre)) {
-            $queryBuilder->where('LOWER(t.nom) LIKE :filtre')
-                        ->setParameter('filtre', '%' . strtolower($filtre) . '%');
-        }
-
-        $types = $queryBuilder->getQuery()->getResult();
+        $types = $typeInterventionRepository->findByFiltre($filtre);
 
         return $this->render('type_intervention/index.html.twig', [
             'types' => $types,
@@ -34,7 +28,7 @@ class TypeInterventionController extends AbstractController
     }
 
     #[Route('/add', name: 'add')]
-    public function add(Request $request, EntityManagerInterface $em): Response
+    public function add(Request $request, TypeInterventionRepository $typeInterventionRepository): Response
     {
         $typeIntervention = new TypeIntervention();
         $form = $this->createForm(TypeInterventionForm::class, $typeIntervention);
@@ -42,8 +36,7 @@ class TypeInterventionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($typeIntervention);
-            $em->flush();
+            $typeInterventionRepository->save($typeIntervention, true);
 
             $this->addFlash('success', 'Type d’intervention créé avec succès !');
 
@@ -57,15 +50,14 @@ class TypeInterventionController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit')]
-    public function edit(TypeIntervention $typeIntervention, Request $request, EntityManagerInterface $em): Response
+    public function edit(TypeIntervention $typeIntervention, Request $request, TypeInterventionRepository $typeInterventionRepository): Response
     {
         $form = $this->createForm(TypeInterventionForm::class, $typeIntervention);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($typeIntervention);
-            $em->flush();
+            $typeInterventionRepository->save($typeIntervention, true);
 
             $this->addFlash('success', 'Type d’intervention modifié avec succès !');
 
@@ -79,11 +71,10 @@ class TypeInterventionController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
-    public function delete(TypeIntervention $typeIntervention, EntityManagerInterface $em, Request $request): Response
+    public function delete(TypeIntervention $typeIntervention, TypeInterventionRepository $typeInterventionRepository, Request $request): Response
     {
         if ($this->isCsrfTokenValid('delete' . $typeIntervention->getId(), $request->request->get('_token'))) {
-            $em->remove($typeIntervention);
-            $em->flush();
+            $typeInterventionRepository->remove($typeIntervention, true);
 
             $this->addFlash('success', 'Type d’intervention supprimé avec succès.');
         } else {
