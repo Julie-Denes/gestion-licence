@@ -6,6 +6,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Intervention;
 
 #[ORM\Entity]
 class Module
@@ -29,6 +30,9 @@ class Module
 
     #[ORM\Column (type: 'boolean')]
     private bool $projetFilRouge;
+
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Intervention::class, orphanRemoval: true)]
+    private Collection $interventions;
 
     #[ORM\ManyToOne(inversedBy: 'module')]
     #[ORM\JoinColumn(nullable: false)]
@@ -160,6 +164,7 @@ class Module
     {
         $this->corpsEnseignants = new ArrayCollection();
         $this->enfants = new ArrayCollection();
+        $this->interventions = new ArrayCollection();
     }
 
     /**
@@ -188,5 +193,30 @@ class Module
 
         return $this;
     }
+    public function getInterventions(): Collection
+{
+    return $this->interventions;
+}
+
+public function addIntervention(Intervention $intervention): self
+{
+    if (!$this->interventions->contains($intervention)) {
+        $this->interventions->add($intervention);
+        $intervention->setModule($this);
+    }
+
+    return $this;
+}
+
+public function removeIntervention(Intervention $intervention): self
+{
+    if ($this->interventions->removeElement($intervention)) {
+        if ($intervention->getModule() === $this) {
+            $intervention->setModule(null);
+        }
+    }
+
+    return $this;
+}
 
 }
