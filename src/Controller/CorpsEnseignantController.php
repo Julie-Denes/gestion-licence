@@ -13,6 +13,8 @@ use App\Repository\CorpsEnseignantRepository;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 #[Route('/corps-enseignant', name: 'corps_enseignant_')]
 class CorpsEnseignantController extends AbstractController
@@ -143,15 +145,15 @@ class CorpsEnseignantController extends AbstractController
     // Style en-têtes
     $headerStyle = [
         'font' => ['bold' => true],
-        'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
-        'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+        'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+        'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
     ];
     $sheet->getStyle('A1:E1')->applyFromArray($headerStyle);
 
     // Bordures et alignement pour toutes les données
     $dataStyle = [
-        'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
-        'alignment' => ['vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER],
+        'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+        'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
     ];
     $sheet->getStyle('A2:E' . ($row - 1))->applyFromArray($dataStyle);
 

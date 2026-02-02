@@ -9,7 +9,7 @@
         <h1>{{ editMode ? 'Modifier un enseignant' : 'Ajouter un enseignant' }}</h1>
         {% if editMode and form.vars.value.modules is not empty %}
         <div class="mb-4 p-3 border rounded bg-light">
-            <h4>Module(s) enseigné(s) :</h4>
+            <h4>Modules enseignés :</h4>
             <ul>
                 {% for module in form.vars.value.modules %}
                     {% set heuresEffectuees = 0 %}
