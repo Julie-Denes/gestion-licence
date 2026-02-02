@@ -11,6 +11,7 @@ import './styles/components/tableau.css';
 import './styles/components/formulaire.css';
 import './styles/components/module.css';
 import './controller/module-parent.js';
+import './controller/intervention-filter.js';
 
 import TomSelect from "tom-select";
 

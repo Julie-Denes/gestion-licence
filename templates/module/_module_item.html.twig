@@ -1,10 +1,10 @@
 <li style="margin-left: {{ niveau * 20 }}px;">
     <div class="d-flex align-items-center justify-content-between mb-1">
         <div>
-            <strong>{{ module.code }}</strong> — {{ module.description }} ({{ module.nbHeure }}h) 
+            {{ module.description }} ({{ module.nbHeure }}h) 
         </div>
         <div>
-            <a href="{{ path('module_edit', {'id': module.id}) }}" class="btn btn-bleu btn-primary">Modifier</a>
+            <a href="{{ path('module_edit', {'id': module.id}) }}" class="btn btn-blanc btn-primary">></a>
         </div>
     </div>
 
