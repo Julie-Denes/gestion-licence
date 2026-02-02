@@ -7,6 +7,27 @@
 {% block body %}
     <div class="container mt-4">
         <h1>{{ editMode ? 'Modifier un enseignant' : 'Ajouter un enseignant' }}</h1>
+        {% if editMode and form.vars.value.modules is not empty %}
+        <div class="mb-4 p-3 border rounded bg-light">
+            <h4>Module(s) enseigné(s) :</h4>
+            <ul>
+                {% for module in form.vars.value.modules %}
+                    {% set heuresEffectuees = 0 %}
+                    {% for intervention in interventions %}
+                        {% if intervention.module.id == module.id %}
+                            {# Calculer la durée en heures #}
+                            {% set heuresEffectuees = heuresEffectuees + ((intervention.dateFin.timestamp - intervention.dateDebut.timestamp) / 3600) %}
+                        {% endif %}
+                    {% endfor %}
+                <li>
+                    {{ module.description }} : {{ module.nbHeure }}h
+                    ({{ (module.nbHeure - heuresEffectuees)|round(2) }}h restantes pour cette année)
+                </li>
+                    {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
 
         {{ form_start(form) }}
             
@@ -14,7 +35,6 @@
             {{ form_row(form.nom) }}
             {{ form_row(form.prenom) }}
             {{ form_row(form.email) }}
-            {{ form_row(form.nbHeure) }}
 
             <div class="mb-3">
                 {{ form_label(form.modules) }}
@@ -53,7 +73,10 @@
             <tbody>
                 {% for intervention in interventions %}
                     <tr>
-                        <td>{{ intervention.dateDebut|date('d/m/Y') }} - {{ intervention.dateFin|date('d/m/Y') }}</td>
+                        <td>
+                        {{ intervention.dateDebut|date('d/m/Y') }}
+                        ({{ intervention.dateDebut|date('H:i') }} - {{ intervention.dateFin|date('H:i') }})
+                        </td>
                         <td>{{ intervention.module.nom }}</td>
                         <td>{{ intervention.typeIntervention.nom }}</td>
                         <td>

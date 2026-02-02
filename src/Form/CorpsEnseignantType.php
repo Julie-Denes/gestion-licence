@@ -26,9 +26,6 @@ class CorpsEnseignantType extends AbstractType
             ->add('email', TextType::class, [
                 'label' => 'Email',
             ])
-            ->add('nbHeure', NumberType::class, [
-                'label' => 'Nombre d\'heures',
-            ])
              ->add('modules', EntityType::class, [
                 'class' => Module::class,
                 'choice_label' => function (Module $module) {

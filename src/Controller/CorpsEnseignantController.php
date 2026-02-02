@@ -98,57 +98,77 @@ class CorpsEnseignantController extends AbstractController
     #[Route('/export/{id}', name: 'export_interventions')]
     public function export(CorpsEnseignant $corpsEnseignant): Response
     {
-        $interventions = $corpsEnseignant->getInterventions();
+    $interventions = $corpsEnseignant->getInterventions();
 
-        // Création du fichier Excel
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
 
-        // En-têtes
-        $sheet->setCellValue('A1', "Date de l'intervention");
-        $sheet->setCellValue('B1', 'Module');
-        $sheet->setCellValue('C1', 'Type');
-        $sheet->setCellValue('D1', 'Autres intervenants');
+    // En-têtes
+    $sheet->setCellValue('A1', 'Date');
+    $sheet->setCellValue('B1', 'Heure');
+    $sheet->setCellValue('C1', 'Module');
+    $sheet->setCellValue('D1', 'Type');
+    $sheet->setCellValue('E1', 'Autres intervenants');
 
-        // Style en-têtes
-        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+    // Remplir les lignes
+    $row = 2;
+    foreach ($interventions as $intervention) {
+        $date = $intervention->getDateDebut()->format('d/m');
+        $heure = $intervention->getDateDebut()->format('H:i') . ' - ' . $intervention->getDateFin()->format('H:i');
+        $module = $intervention->getModule()->getNom();
+        $type = $intervention->getTypeIntervention()->getNom();
 
-        // Remplir les lignes
-        $row = 2;
-        foreach ($interventions as $intervention) {
-            $date = $intervention->getDateDebut()->format('d/m/Y') . ' - ' . $intervention->getDateFin()->format('d/m/Y');
-            $module = $intervention->getModule()->getNom();
-            $type = $intervention->getTypeIntervention()->getNom();
-
-            $autres = [];
-            foreach ($intervention->getCorpsEnseignants() as $enseignant) {
-                if ($enseignant->getId() !== $corpsEnseignant->getId()) {
-                    $autres[] = $enseignant->getPrenom() . ' ' . $enseignant->getNom();
-                }
+        $autres = [];
+        foreach ($intervention->getCorpsEnseignants() as $enseignant) {
+            if ($enseignant->getId() !== $corpsEnseignant->getId()) {
+                $autres[] = $enseignant->getPrenom() . ' ' . $enseignant->getNom();
             }
-            $autresTxt = count($autres) ? implode(', ', $autres) : 'Aucun autre intervenant';
-
-            $sheet->setCellValue('A' . $row, $date);
-            $sheet->setCellValue('B' . $row, $module);
-            $sheet->setCellValue('C' . $row, $type);
-            $sheet->setCellValue('D' . $row, $autresTxt);
-            $row++;
         }
+        $autresTxt = count($autres) ? implode(', ', $autres) : 'Aucun autre intervenant';
 
-        // Générer le fichier .xls
-        $writer = new Xls($spreadsheet);
+        $sheet->setCellValue('A' . $row, $date);
+        $sheet->setCellValue('B' . $row, $heure);
+        $sheet->setCellValue('C' . $row, $module);
+        $sheet->setCellValue('D' . $row, $type);
+        $sheet->setCellValue('E' . $row, $autresTxt);
 
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-        $response->headers->set('Content-Disposition', 'attachment;filename="interventions_'.$corpsEnseignant->getNom().'.xls"');
-        $response->headers->set('Cache-Control', 'max-age=0');
-
-        ob_start();
-        $writer->save('php://output');
-        $content = ob_get_clean();
-        $response->setContent($content);
-
-        return $response;
+        $row++;
     }
+
+    // Auto-size pour toutes les colonnes
+    foreach (range('A', 'E') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // Style en-têtes
+    $headerStyle = [
+        'font' => ['bold' => true],
+        'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
+        'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+    ];
+    $sheet->getStyle('A1:E1')->applyFromArray($headerStyle);
+
+    // Bordures et alignement pour toutes les données
+    $dataStyle = [
+        'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
+        'alignment' => ['vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER],
+    ];
+    $sheet->getStyle('A2:E' . ($row - 1))->applyFromArray($dataStyle);
+
+    // Générer le fichier .xls
+    $writer = new Xls($spreadsheet);
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+    $response->headers->set('Content-Disposition', 'attachment;filename="interventions_' . $corpsEnseignant->getNom() . '.xls"');
+    $response->headers->set('Cache-Control', 'max-age=0');
+
+    ob_start();
+    $writer->save('php://output');
+    $content = ob_get_clean();
+    $response->setContent($content);
+
+    return $response;
+    }
+
 
 }
