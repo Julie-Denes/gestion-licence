@@ -12,5 +12,25 @@ import './styles/components/formulaire.css';
 import './styles/components/module.css';
 import './controller/module-parent.js';
 
+import TomSelect from "tom-select";
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.tomselect').forEach((el) => {
+    // Crée TomSelect
+    new TomSelect(el, {
+      plugins: ['remove_button'],
+      create: false,
+      sortField: {
+        field: "text",
+        direction: "asc"
+      }
+    });
+
+    // Masque le select original **après** initialisation
+    el.style.display = 'none';
+  });
+});
+
+
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

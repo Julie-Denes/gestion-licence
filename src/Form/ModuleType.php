@@ -54,9 +54,15 @@ class ModuleType extends AbstractType
                     $qb = $repo->createQueryBuilder('m')
                         ->orderBy('m.code', 'ASC');
 
-                    if (!empty($options['data']) && $options['data']->getId() !== null) {
+                    try {
+                    $currentId = $options['data']->getId();
+                    } catch (\Error $e) {
+                        $currentId = null;
+                    }
+
+                    if ($currentId !== null) {
                         $qb->andWhere('m.id != :current')
-                        ->setParameter('current', $options['data']->getId());
+                            ->setParameter('current', $currentId);
                     }
 
                     return $qb;

@@ -10,11 +10,13 @@
 .btn-bleu {
   background: #28416C;
   color: white;
+  text-decoration: none;
 }
 
 .btn-blanc {
   background: #F0F0F0;
   color: black;
+  text-decoration: none;
 }
 
 .btn-jaune {

@@ -19,20 +19,34 @@ class CorpsEnseignantController extends AbstractController
     #[Route('/', name: 'list')]
     public function list(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $filtre = $request->query->get('filtre', '');
+        $filtreNom = $request->query->get('filtreNom', '');
+        $filtrePrenom = $request->query->get('filtrePrenom', '');
+        $filtreEmail = $request->query->get('filtreEmail', '');
         
         $queryBuilder = $entityManager->getRepository(CorpsEnseignant::class)->createQueryBuilder('t');
 
-        if (!empty($filtre)) {
-            $queryBuilder->where('LOWER(t.nom) LIKE :filtre')
-                        ->setParameter('filtre', '%' . strtolower($filtre) . '%');
+        if (!empty($filtreNom)) {
+            $queryBuilder->andWhere('LOWER(t.nom) LIKE :filtreNom')
+                        ->setParameter('filtreNom', '%' . strtolower($filtreNom) . '%');
+        }
+
+        if (!empty($filtrePrenom)) {
+            $queryBuilder->andWhere('LOWER(t.prenom) LIKE :filtrePrenom')
+                        ->setParameter('filtrePrenom', '%'. strtolower($filtrePrenom) . '%');
+        }
+
+        if (!empty($filtreEmail)) {
+            $queryBuilder->andWhere('LOWER(t.email) LIKE :filtreEmail')
+                        ->setParameter('filtreEmail', '%'. strtolower($filtreEmail) . '%');
         }
 
         $enseignants = $queryBuilder->getQuery()->getResult();
 
         return $this->render('corps_enseignant/index.html.twig', [
             'enseignants' => $enseignants,
-            'filtre' => $filtre,
+            'filtreNom' => $filtreNom,
+            'filtrePrenom' => $filtrePrenom,
+            'filtreEmail' => $filtreEmail,
         ]);
     }
 

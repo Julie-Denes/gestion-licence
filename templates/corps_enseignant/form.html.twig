@@ -9,13 +9,26 @@
         <h1>{{ editMode ? 'Modifier un enseignant' : 'Ajouter un enseignant' }}</h1>
 
         {{ form_start(form) }}
-            {{ form_widget(form) }}
+            
+            {# On affiche les champs un par un pour pouvoir personnaliser "modules" #}
+            {{ form_row(form.nom) }}
+            {{ form_row(form.prenom) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.nbHeure) }}
+
+            <div class="mb-3">
+                {{ form_label(form.modules) }}
+                {{ form_widget(form.modules, {'attr': {'class': 'tomselect'}}) }}
+                {{ form_errors(form.modules) }}
+            </div>
+
             <div class="mt-3 d-flex justify-content-between">
-                <a href="{{ path('corps_enseignant_list') }}" class="btn btn-secondary">Retour à la liste</a>
+                <a href="{{ path('corps_enseignant_list') }}" class="btn btn-bleu">Retour à la liste</a>
                 <button class="btn btn-primary">
                     {{ editMode ? 'Enregistrer les modifications' : 'Ajouter' }}
                 </button>
             </div>
+
         {{ form_end(form) }}
 
         {% if editMode %}
@@ -33,14 +46,14 @@
                 </tr>
             </thead>
             <a href="{{ path('corps_enseignant_export_interventions', {id: form.vars.value.id}) }}" 
-                class="btn btn-success mb-3">
+                class="btn btn-bleu btn-success mb-3">
                 <i class="bi bi-file-earmark-excel"></i> Exporter en Excel
             </a>
 
             <tbody>
                 {% for intervention in interventions %}
                     <tr>
-                        <td>{{ intervention.dateDebut|date('d/m/Y') }} {{ intervention.dateFin|date('d/m/Y') }}</td>
+                        <td>{{ intervention.dateDebut|date('d/m/Y') }} - {{ intervention.dateFin|date('d/m/Y') }}</td>
                         <td>{{ intervention.module.nom }}</td>
                         <td>{{ intervention.typeIntervention.nom }}</td>
                         <td>
