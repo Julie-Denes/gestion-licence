@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier{% endblock %}
+
+{% block stylesheets %}
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="calendar-page">
+    <h1>Calendrier</h1>
+
+    <div id="calendar"></div>
+
+    <div class="export-buttons">
+        <a href="{{ path('export_week') }}" class="btn btn-dark">
+            Exporter le planning de la semaine (.xls)
+        </a>
+
+        <a href="{{ path('export_year') }}" class="btn btn-warning">
+            Exporter le calendrier de l’année (.xls)
+        </a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    let calendarEl = document.getElementById('calendar');
+
+    let calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        locale: 'fr',
+
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'timeGridDay,timeGridWeek,dayGridMonth'
+        },
+
+        selectable: true,
+        nowIndicator: true,
+
+        events: "{{ path('calendar_events') }}",
+
+        select: function(info) {
+            window.location.href = "{{ path('intervention_new') }}?start=" + info.startStr + "&end=" + info.endStr;
+        },
+
+        eventDidMount: function(info) {
+            if (info.event.extendedProps.visio) {
+                let icon = document.createElement('span');
+                icon.innerHTML = " 🎥";
+                info.el.querySelector('.fc-event-title').appendChild(icon);
+            }
+        }
+    });
+
+    calendar.render();
+});
+</script>
+{% endblock %}
