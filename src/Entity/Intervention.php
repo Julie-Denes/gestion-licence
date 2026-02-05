@@ -23,6 +23,19 @@ class Intervention
     #[ORM\Column(type:'datetime')]
     private \DateTimeInterface $dateFin;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $visio = false;
+
+    public function isVisio(): bool
+    {
+        return $this->visio;
+    }
+
+    public function setVisio(bool $visio): self
+    {
+        $this->visio = $visio;
+        return $this;
+    }
     
     #[ORM\ManyToOne(inversedBy: 'interventions')]
     #[ORM\JoinColumn(nullable: false)]

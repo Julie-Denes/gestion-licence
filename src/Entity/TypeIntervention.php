@@ -4,6 +4,10 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Intervention;
+
 
 #[ORM\Entity]
 class TypeIntervention
@@ -21,6 +25,22 @@ class TypeIntervention
 
     #[ORM\Column(length: 20)]
     private string $couleur;
+
+    #[ORM\OneToMany(mappedBy: 'typeIntervention', targetEntity: Intervention::class)]
+    private Collection $interventions;
+
+    public function __construct()
+    {
+        $this->interventions = new ArrayCollection();
+    }
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
 
     public function getId(): ?int
     {

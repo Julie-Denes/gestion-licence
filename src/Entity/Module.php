@@ -6,6 +6,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Intervention;
+
 
 #[ORM\Entity]
 class Module
@@ -43,6 +45,10 @@ class Module
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $enfants;
+
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Intervention::class)]
+    private Collection $interventions;
+
 
      public function getId(): ?int
     {
@@ -138,7 +144,7 @@ class Module
     {
         if (!$this->enfants->contains($enfant))
         {
-            $this->enfants->add($enfants);
+            $this->enfants->add($enfants); //enfants ? avec un s ?
             $enfant->setParent($this);
         }
         return $this;
@@ -160,6 +166,15 @@ class Module
     {
         $this->corpsEnseignants = new ArrayCollection();
         $this->enfants = new ArrayCollection();
+        $this->interventions = new ArrayCollection();//test
+
+    }
+        /**
+     * @return Collection<int, Intervention> //test
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
     }
 
     /**

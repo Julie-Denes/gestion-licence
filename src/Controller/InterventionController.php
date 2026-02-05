@@ -58,5 +58,17 @@ public function index(
         'pages' => $pages
     ]);
 }
+#[Route('/interventions/{id}', name: 'intervention_show')]
+public function show(InterventionRepository $interventionRepo, int $id): Response
+{
+    $intervention = $interventionRepo->find($id);
+    if (!$intervention) {
+        throw $this->createNotFoundException('Intervention not found');
+    }
+    return $this->render('intervention/show.html.twig', [
+        'intervention' => $intervention,
+    ]);
+}
+
 
 }
