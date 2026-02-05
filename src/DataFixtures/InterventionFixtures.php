@@ -16,9 +16,9 @@ class InterventionFixtures extends Fixture implements DependentFixtureInterface
     {
         // Titres et dates des interventions
         $interventionsData = [
-            ['titre' => 'Introduction à la programmation', 'dateDebut' => '2024-09-05', 'dateFin' => '2024-09-10'],
-            ['titre' => 'Travaux pratiques PHP', 'dateDebut' => '2024-10-01', 'dateFin' => '2024-10-05'],
-            ['titre' => 'Projet encadré semestre 1', 'dateDebut' => '2024-11-15', 'dateFin' => '2024-12-15'],
+            ['titre' => 'Introduction à la programmation', 'dateDebut' => '2024-09-05', 'dateFin' => '2024-09-05 02:00'],
+            ['titre' => 'Travaux pratiques PHP', 'dateDebut' => '2024-10-01', 'dateFin' => '2024-10-01 03:00'],
+            ['titre' => 'Projet encadré semestre 1', 'dateDebut' => '2024-11-15', 'dateFin' => '2024-11-15 04:00'],
         ];
 
         // Références aux entités existantes

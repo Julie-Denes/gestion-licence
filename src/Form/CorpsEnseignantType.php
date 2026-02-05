@@ -18,16 +18,13 @@ class CorpsEnseignantType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'nom',
+                'label' => 'Nom',
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'prenom',
+                'label' => 'Prénom',
             ])
             ->add('email', TextType::class, [
-                'label' => 'email',
-            ])
-            ->add('nbHeure', NumberType::class, [
-                'label' => 'Nombre d\'heure',
+                'label' => 'Email',
             ])
              ->add('modules', EntityType::class, [
                 'class' => Module::class,
@@ -36,7 +33,7 @@ class CorpsEnseignantType extends AbstractType
                 },
                 'label' => 'Modules enseignés',
                 'multiple' => true,      // plusieurs modules possibles
-                'expanded' => true,      // cases à cocher
+                'expanded' => false,      // cases à cocher
                 'required' => false,
             ]);
     }

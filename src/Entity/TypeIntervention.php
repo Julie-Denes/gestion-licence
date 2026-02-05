@@ -26,21 +26,39 @@ class TypeIntervention
     #[ORM\Column(length: 20)]
     private string $couleur;
 
-    #[ORM\OneToMany(mappedBy: 'typeIntervention', targetEntity: Intervention::class)]
-    private Collection $interventions;
+    #[ORM\OneToMany(mappedBy: 'typeIntervention', targetEntity: Intervention::class, orphanRemoval: true)]
+private Collection $interventions;
 
-    public function __construct()
-    {
-        $this->interventions = new ArrayCollection();
-    }
-    /**
-     * @return Collection<int, Intervention>
-     */
-    public function getInterventions(): Collection
-    {
-        return $this->interventions;
+public function __construct()
+{
+    $this->interventions = new ArrayCollection();
+}
+
+public function getInterventions(): Collection
+{
+    return $this->interventions;
+}
+
+public function addIntervention(Intervention $intervention): self
+{
+    if (!$this->interventions->contains($intervention)) {
+        $this->interventions->add($intervention);
+        $intervention->setTypeIntervention($this);
     }
 
+    return $this;
+}
+
+public function removeIntervention(Intervention $intervention): self
+{
+    if ($this->interventions->removeElement($intervention)) {
+        if ($intervention->getTypeIntervention() === $this) {
+            $intervention->setTypeIntervention(null);
+        }
+    }
+
+    return $this;
+}
 
     public function getId(): ?int
     {

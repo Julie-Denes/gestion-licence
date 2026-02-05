@@ -20,7 +20,7 @@
                 style="max-width: 100px;">
 
     <button type="submit" class="btn btn-jaune">Rechercher</button>
-    <a href="{{ path('bloc_enseignement_list') }}" class="btn btn-secondary">Réinitialiser</a>
+    <a href="{{ path('bloc_enseignement_list') }}" class="btn btn-blanc">Réinitialiser</a>
 </form>
         
 
@@ -30,7 +30,7 @@
                     <th>Code</th>
                     <th>Nom</th>
                     <th>Description</th>
-                    <th>Nombre d'heure</th>
+                    <th>Nombre d'heures</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -42,7 +42,7 @@
                         <td>{{ enseignement.description }}</td>
                         <td>{{ enseignement.nbHeure }}</td>
                         <td>
-                            <a href="{{ path('bloc_enseignement_edit', {'id': enseignement.id}) }}" class="btn btn-sm btn-primary">
+                            <a href="{{ path('bloc_enseignement_edit', {'id': enseignement.id}) }}" class="btn btn-bleu btn-primary">
                             Modifier
                             </a>
                         </td>

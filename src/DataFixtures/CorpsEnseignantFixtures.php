@@ -13,11 +13,11 @@ class CorpsEnseignantFixtures extends Fixture implements DependentFixtureInterfa
     public function load(ObjectManager $manager): void
     {
         $enseignants = [
-            ['nom' => 'Dupont', 'prenom' => 'Alice', 'email' => 'alice.dupont@example.com', 'nbHeure' => 20.0],
-            ['nom' => 'Martin', 'prenom' => 'Jean', 'email' => 'jean.martin@example.com', 'nbHeure' => 18.5],
-            ['nom' => 'Bernard', 'prenom' => 'Claire', 'email' => 'claire.bernard@example.com', 'nbHeure' => 22.0],
-            ['nom' => 'Durand', 'prenom' => 'Paul', 'email' => 'paul.durand@example.com', 'nbHeure' => 15.0],
-            ['nom' => 'Petit', 'prenom' => 'Sophie', 'email' => 'sophie.petit@example.com', 'nbHeure' => 25.0],
+            ['nom' => 'Dupont', 'prenom' => 'Alice', 'email' => 'alice.dupont@example.com'],
+            ['nom' => 'Martin', 'prenom' => 'Jean', 'email' => 'jean.martin@example.com'],
+            ['nom' => 'Bernard', 'prenom' => 'Claire', 'email' => 'claire.bernard@example.com'],
+            ['nom' => 'Durand', 'prenom' => 'Paul', 'email' => 'paul.durand@example.com'],
+            ['nom' => 'Petit', 'prenom' => 'Sophie', 'email' => 'sophie.petit@example.com'],
         ];
 
         $modulesRefs = ['module_101', 'module_102', 'module_201', 'module_202', 'module_301'];
@@ -27,7 +27,6 @@ class CorpsEnseignantFixtures extends Fixture implements DependentFixtureInterfa
             $enseignant->setNom($data['nom']);
             $enseignant->setPrenom($data['prenom']);
             $enseignant->setEmail($data['email']);
-            $enseignant->setNbHeure($data['nbHeure']);
 
             $nbModules = random_int(1, 3);
             $modulesChoisis = array_rand($modulesRefs, $nbModules);

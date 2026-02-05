@@ -23,9 +23,6 @@ class CorpsEnseignant
     #[ORM\Column]
     private string $email;
 
-    #[ORM\Column]
-    private float $nbHeure;
-
     #[ORM\ManyToMany(targetEntity: Module::class, inversedBy: 'corpsEnseignants')]
     #[ORM\JoinTable(name: 'enseignant_module')]
     private Collection $modules;
@@ -54,10 +51,17 @@ class CorpsEnseignant
         return $this->email;
     }
 
-    public function getNbHeure(): ?float
+    public function getNbHeure(): float
     {
-        return $this->nbHeure;
+        $total = 0;
+
+        foreach ($this->modules as $module) {
+            $total += $module->getNbHeure();
+        }
+
+        return $total;
     }
+
 
     public function setNom(string $nom): self
     {

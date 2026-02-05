@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Intervention;
 
-
 #[ORM\Entity]
 class Module
 {
@@ -32,6 +31,9 @@ class Module
     #[ORM\Column (type: 'boolean')]
     private bool $projetFilRouge;
 
+    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Intervention::class, orphanRemoval: true)]
+    private Collection $interventions;
+
     #[ORM\ManyToOne(inversedBy: 'module')]
     #[ORM\JoinColumn(nullable: false)]
     private ?BlocEnseignement $blocEnseignement = null;
@@ -46,8 +48,6 @@ class Module
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $enfants;
 
-    #[ORM\OneToMany(mappedBy: 'module', targetEntity: Intervention::class)]
-    private Collection $interventions;
 
 
      public function getId(): ?int
@@ -166,15 +166,7 @@ class Module
     {
         $this->corpsEnseignants = new ArrayCollection();
         $this->enfants = new ArrayCollection();
-        $this->interventions = new ArrayCollection();//test
-
-    }
-        /**
-     * @return Collection<int, Intervention> //test
-     */
-    public function getInterventions(): Collection
-    {
-        return $this->interventions;
+        $this->interventions = new ArrayCollection();
     }
 
     /**
@@ -203,5 +195,30 @@ class Module
 
         return $this;
     }
+    public function getInterventions(): Collection
+{
+    return $this->interventions;
+}
+
+public function addIntervention(Intervention $intervention): self
+{
+    if (!$this->interventions->contains($intervention)) {
+        $this->interventions->add($intervention);
+        $intervention->setModule($this);
+    }
+
+    return $this;
+}
+
+public function removeIntervention(Intervention $intervention): self
+{
+    if ($this->interventions->removeElement($intervention)) {
+        if ($intervention->getModule() === $this) {
+            $intervention->setModule(null);
+        }
+    }
+
+    return $this;
+}
 
 }

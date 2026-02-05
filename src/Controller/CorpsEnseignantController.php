@@ -9,35 +9,35 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\CorpsEnseignantRepository;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 #[Route('/corps-enseignant', name: 'corps_enseignant_')]
 class CorpsEnseignantController extends AbstractController
 {
     #[Route('/', name: 'list')]
-    public function list(Request $request, EntityManagerInterface $entityManager): Response
+    public function list(Request $request, CorpsEnseignantRepository $corpsEnseignantRepository): Response
     {
-        $filtre = $request->query->get('filtre', '');
-        
-        $queryBuilder = $entityManager->getRepository(CorpsEnseignant::class)->createQueryBuilder('t');
+        $filtreNom = $request->query->get('filtreNom', '');
+        $filtrePrenom = $request->query->get('filtrePrenom', '');
+        $filtreEmail = $request->query->get('filtreEmail', '');
 
-        if (!empty($filtre)) {
-            $queryBuilder->where('LOWER(t.nom) LIKE :filtre')
-                        ->setParameter('filtre', '%' . strtolower($filtre) . '%');
-        }
-
-        $enseignants = $queryBuilder->getQuery()->getResult();
+        $enseignants = $corpsEnseignantRepository->findByFilters($filtreNom, $filtrePrenom, $filtreEmail);
 
         return $this->render('corps_enseignant/index.html.twig', [
             'enseignants' => $enseignants,
-            'filtre' => $filtre,
+            'filtreNom' => $filtreNom,
+            'filtrePrenom' => $filtrePrenom,
+            'filtreEmail' => $filtreEmail,
         ]);
     }
 
     #[Route('/add', name: 'add')]
-    public function add(Request $request, EntityManagerInterface $em): Response
+    public function add(Request $request, CorpsEnseignantRepository $corpsEnseignantRepository): Response
     {
         $corpsEnseignant = new CorpsEnseignant();
         $form = $this->createForm(CorpsEnseignantType::class, $corpsEnseignant);
@@ -45,8 +45,7 @@ class CorpsEnseignantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($corpsEnseignant);
-            $em->flush();
+            $corpsEnseignantRepository->save($corpsEnseignant, true);
 
             $this->addFlash('success', 'Enseignant ajouter avec succès !');
 
@@ -60,15 +59,14 @@ class CorpsEnseignantController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit')]
-    public function edit(CorpsEnseignant $corpsEnseignant, Request $request, EntityManagerInterface $em): Response
+    public function edit(CorpsEnseignant $corpsEnseignant, Request $request, CorpsEnseignantRepository $corpsEnseignantRepository): Response
     {
         $form = $this->createForm(CorpsEnseignantType::class, $corpsEnseignant);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($corpsEnseignant);
-            $em->flush();
+            $corpsEnseignantRepository->save($corpsEnseignant, true);
 
             $this->addFlash('success', 'Enseignant modifié avec succès !');
 
@@ -85,11 +83,10 @@ class CorpsEnseignantController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
-    public function delete(CorpsEnseignant $corpsEnseignant, EntityManagerInterface $em, Request $request): Response
+    public function delete(CorpsEnseignant $corpsEnseignant, CorpsEnseignantRepository $corpsEnseignantRepository, Request $request): Response
     {
         if ($this->isCsrfTokenValid('delete' . $corpsEnseignant->getId(), $request->request->get('_token'))) {
-            $em->remove($corpsEnseignant);
-            $em->flush();
+            $corpsEnseignantRepository->remove($corpsEnseignant, true);
 
             $this->addFlash('success', 'Enseignant supprimé avec succès.');
         } else {
@@ -103,57 +100,77 @@ class CorpsEnseignantController extends AbstractController
     #[Route('/export/{id}', name: 'export_interventions')]
     public function export(CorpsEnseignant $corpsEnseignant): Response
     {
-        $interventions = $corpsEnseignant->getInterventions();
+    $interventions = $corpsEnseignant->getInterventions();
 
-        // Création du fichier Excel
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
 
-        // En-têtes
-        $sheet->setCellValue('A1', "Date de l'intervention");
-        $sheet->setCellValue('B1', 'Module');
-        $sheet->setCellValue('C1', 'Type');
-        $sheet->setCellValue('D1', 'Autres intervenants');
+    // En-têtes
+    $sheet->setCellValue('A1', 'Date');
+    $sheet->setCellValue('B1', 'Heure');
+    $sheet->setCellValue('C1', 'Module');
+    $sheet->setCellValue('D1', 'Type');
+    $sheet->setCellValue('E1', 'Autres intervenants');
 
-        // Style en-têtes
-        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+    // Remplir les lignes
+    $row = 2;
+    foreach ($interventions as $intervention) {
+        $date = $intervention->getDateDebut()->format('d/m');
+        $heure = $intervention->getDateDebut()->format('H:i') . ' - ' . $intervention->getDateFin()->format('H:i');
+        $module = $intervention->getModule()->getNom();
+        $type = $intervention->getTypeIntervention()->getNom();
 
-        // Remplir les lignes
-        $row = 2;
-        foreach ($interventions as $intervention) {
-            $date = $intervention->getDateDebut()->format('d/m/Y') . ' - ' . $intervention->getDateFin()->format('d/m/Y');
-            $module = $intervention->getModule()->getNom();
-            $type = $intervention->getTypeIntervention()->getNom();
-
-            $autres = [];
-            foreach ($intervention->getCorpsEnseignants() as $enseignant) {
-                if ($enseignant->getId() !== $corpsEnseignant->getId()) {
-                    $autres[] = $enseignant->getPrenom() . ' ' . $enseignant->getNom();
-                }
+        $autres = [];
+        foreach ($intervention->getCorpsEnseignants() as $enseignant) {
+            if ($enseignant->getId() !== $corpsEnseignant->getId()) {
+                $autres[] = $enseignant->getPrenom() . ' ' . $enseignant->getNom();
             }
-            $autresTxt = count($autres) ? implode(', ', $autres) : 'Aucun autre intervenant';
-
-            $sheet->setCellValue('A' . $row, $date);
-            $sheet->setCellValue('B' . $row, $module);
-            $sheet->setCellValue('C' . $row, $type);
-            $sheet->setCellValue('D' . $row, $autresTxt);
-            $row++;
         }
+        $autresTxt = count($autres) ? implode(', ', $autres) : 'Aucun autre intervenant';
 
-        // Générer le fichier .xls
-        $writer = new Xls($spreadsheet);
+        $sheet->setCellValue('A' . $row, $date);
+        $sheet->setCellValue('B' . $row, $heure);
+        $sheet->setCellValue('C' . $row, $module);
+        $sheet->setCellValue('D' . $row, $type);
+        $sheet->setCellValue('E' . $row, $autresTxt);
 
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-        $response->headers->set('Content-Disposition', 'attachment;filename="interventions_'.$corpsEnseignant->getNom().'.xls"');
-        $response->headers->set('Cache-Control', 'max-age=0');
-
-        ob_start();
-        $writer->save('php://output');
-        $content = ob_get_clean();
-        $response->setContent($content);
-
-        return $response;
+        $row++;
     }
+
+    // Auto-size pour toutes les colonnes
+    foreach (range('A', 'E') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // Style en-têtes
+    $headerStyle = [
+        'font' => ['bold' => true],
+        'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+        'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
+    ];
+    $sheet->getStyle('A1:E1')->applyFromArray($headerStyle);
+
+    // Bordures et alignement pour toutes les données
+    $dataStyle = [
+        'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+        'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
+    ];
+    $sheet->getStyle('A2:E' . ($row - 1))->applyFromArray($dataStyle);
+
+    // Générer le fichier .xls
+    $writer = new Xls($spreadsheet);
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+    $response->headers->set('Content-Disposition', 'attachment;filename="interventions_' . $corpsEnseignant->getNom() . '.xls"');
+    $response->headers->set('Cache-Control', 'max-age=0');
+
+    ob_start();
+    $writer->save('php://output');
+    $content = ob_get_clean();
+    $response->setContent($content);
+
+    return $response;
+    }
+
 
 }

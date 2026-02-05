@@ -9,30 +9,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\BlocEnseignementRepository;
 
 #[Route('/bloc-enseignement', name: 'bloc_enseignement_')]
 class BlocEnseignementController extends AbstractController
 {
     #[Route('/', name: 'list')]
-    public function list(Request $request, EntityManagerInterface $entityManager): Response
+    public function list(Request $request, BlocEnseignementRepository $blocEnseignementRepository): Response
     {
         $filtreNom = $request->query->get('filtreNom', '');
         $filtreCode = $request->query->get('filtreCode', '');
 
-        $queryBuilder = $entityManager->getRepository(BlocEnseignement::class)->createQueryBuilder('t');
-
-        if(!empty($filtreNom)) 
-        {
-            $queryBuilder->where('LOWER(t.nom) LIKE :filtreNom')
-                        ->setParameter('filtreNom', '%' . strtolower($filtreNom) . '%');
-        }
-
-        if (!empty($filtreCode)) {
-        $queryBuilder->andWhere('t.code LIKE :code')
-           ->setParameter('code', '%' . $filtreCode . '%');
-    }
-
-        $enseignements = $queryBuilder->getQuery()->getResult();
+        $enseignements = $blocEnseignementRepository->findByFilters($filtreNom, $filtreCode);
 
         return $this->render('bloc_enseignement/index.html.twig', [
             'enseignements' => $enseignements,
@@ -42,15 +30,14 @@ class BlocEnseignementController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit')]
-    public function edit(BlocEnseignement $blocEnseignement, Request $request, EntityManagerInterface $em): Response
+    public function edit(BlocEnseignement $blocEnseignement, Request $request, BlocEnseignementRepository $blocEnseignementRepository): Response
     {
         $form = $this->createForm(BlocEnseignementType::class, $blocEnseignement);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($blocEnseignement);
-            $em->flush();
+            $blocEnseignementRepository->save($blocEnseignement, true);
 
             $this->addFlash('success', 'Bloc d’Enseignement modifié avec succès !');
 
