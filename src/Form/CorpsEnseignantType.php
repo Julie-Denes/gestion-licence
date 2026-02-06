@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+
 
 class CorpsEnseignantType extends AbstractType
 {
@@ -23,7 +25,7 @@ class CorpsEnseignantType extends AbstractType
             ->add('prenom', TextType::class, [
                 'label' => 'Prénom',
             ])
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
                 'label' => 'Email',
             ])
              ->add('modules', EntityType::class, [
