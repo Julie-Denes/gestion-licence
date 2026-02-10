@@ -55,7 +55,7 @@ class Module
         return $this->id;
     }
 
-     public function getCode(): ?int
+     public function getCode(): ?string
     {
         return $this->code;
     }
@@ -90,7 +90,7 @@ class Module
         return $this->parent;
     }
 
-    public function setCode(int $code): self
+    public function setCode(string $code): self
     {
         $this->code = $code;
         return $this;
