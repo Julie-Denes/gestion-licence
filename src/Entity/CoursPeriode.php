@@ -12,13 +12,7 @@ class CoursPeriode
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(type: 'date')]
-    private \DateTimeImmutable $dateDebut;
-
-    #[ORM\Column(type: 'date')]
-    private \DateTimeImmutable $dateFin;
-
-    #[ORM\ManyToOne(inversedBy: 'coursPeriodes')]
+        #[ORM\ManyToOne(inversedBy: 'coursPeriodes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?AnneeScolaire $anneeScolaire = null;
 
@@ -26,28 +20,38 @@ class CoursPeriode
     {
         return $this->id;
     }
+    
+#[ORM\Column(type: 'date')]
+private ?\DateTimeInterface $dateDebut = null;
 
-    public function getDateDebut(): ?\DateTimeImmutable
-    {
-        return $this->dateDebut;
-    }
+#[ORM\Column(type: 'date')]
+private ?\DateTimeInterface $dateFin = null;
 
-    public function getDateFin(): ?\DateTimeImmutable
-    {
-        return $this->dateFin;
-    }
 
-    public function setDateDebut(\DateTimeImmutable $dateDebut): self
-    {
-        $this->dateDebut = $dateDebut;
-        return $this;
-    }
 
-    public function setDateFin(\DateTimeImmutable $dateFin): self
-    {
-        $this->dateFin = $dateFin;
-        return $this;
-    }
+
+public function getDateDebut(): ?\DateTimeInterface
+{
+    return $this->dateDebut;
+}
+
+public function getDateFin(): ?\DateTimeInterface
+{
+    return $this->dateFin;
+}
+
+
+public function setDateDebut(\DateTimeInterface $dateDebut): self
+{
+    $this->dateDebut = $dateDebut;
+    return $this;
+}
+
+public function setDateFin(\DateTimeInterface $dateFin): self
+{
+    $this->dateFin = $dateFin;
+    return $this;
+}
 
     public function getAnneeScolaire(): ?AnneeScolaire
     {

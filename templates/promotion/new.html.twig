@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Ajouter une semaine de cours</h1>
+
+<p><strong>Année :</strong> {{ annee.nom }}</p>
+
+{{ form_start(form) }}
+
+    {{ form_row(form.dateDebut) }}
+    {{ form_row(form.dateFin) }}
+
+    <a href="{{ path('promotion_show', { annee: annee.id }) }}"
+       class="btn-secondary">
+        Retour à la liste
+    </a>
+
+    <button type="submit" class="btn-primary">
+        Enregistrer les informations
+    </button>
+
+{{ form_end(form) }}
+{% endblock %}

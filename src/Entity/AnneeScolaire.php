@@ -69,6 +69,8 @@ class AnneeScolaire
         return $this;
     }
 
+    
+
 
     /** @return Collection<int, CoursPeriode */
     public function getCoursPeriodes(): Collection

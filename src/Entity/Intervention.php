@@ -13,9 +13,13 @@ class Intervention
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private int $id;
-
+/*
     #[ORM\Column]
     private string $titre;
+*/
+#[ORM\Column(length: 255, nullable: true)]
+private ?string $titre = null;
+
 
     #[ORM\Column(type:'datetime')]
     private \DateTimeInterface $dateDebut;

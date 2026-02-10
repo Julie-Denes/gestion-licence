@@ -116,20 +116,27 @@ function closeModal() {
             <span></span>
         </div>
 
-        {% for semaine in semaines %}
-            <div class="table-row">
-                <span>{{ semaine.debut }}</span>
-                <span>{{ semaine.fin }}</span>
-                <span>
-                    <a href="#" class="link">👁 Accéder à la fiche</a>
-                </span>
-            </div>
-        {% endfor %}
+       {% for semaine in annee.coursPeriodes %}
+
+    <div class="table-row">
+        <span>{{ semaine.dateDebut|date('d/m/Y') }}</span>
+        <span>{{ semaine.dateFin|date('d/m/Y') }}</span>
+        <span>
+            <a href="{{ path('semaine_edit', { anneeId: annee.id, id: semaine.id }) }}" class="link">👁 Accéder à la fiche</a>
+        </span>
+    </div>
+{% else %}
+    <div class="table-row">
+        <span colspan="3">Aucune semaine de cours</span>
+    </div>
+{% endfor %}
+
     </div>
 
-    <button class="btn-primary add-btn">
-        Ajouter une semaine de cours
-    </button>
+    <a href="{{ path('semaine_new', { id: annee.id }) }}"
+   class="btn-primary add-btn">
+    Ajouter une semaine de cours
+</a>
 
 </div>
 {% endblock %}

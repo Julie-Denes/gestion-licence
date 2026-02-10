@@ -1,8 +1,7 @@
-
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>Modifier une intervention</h1>
+<h1>Ajouter une intervention</h1>
 
 {% for message in app.flashes('error') %}
     <div class="alert alert-danger">{{ message }}</div>
@@ -21,16 +20,6 @@
     {{ form_row(form.corpsEnseignants) }}
     {{ form_row(form.visio) }}
 
-    <button class="btn btn-primary">Enregistrer les modifications</button>
+    <button class="btn btn-primary">Enregistrer</button>
 {{ form_end(form) }}
-
-<hr>
-
-<form method="post"
-      action="{{ path('intervention_delete', {id: intervention.id}) }}"
-      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette intervention ?');">
-    <input type="hidden" name="_token"
-           value="{{ csrf_token('delete' ~ intervention.id) }}">
-    <button class="btn btn-danger">Supprimer l’intervention</button>
-</form>
 {% endblock %}
