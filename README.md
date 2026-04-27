@@ -24,7 +24,13 @@ Etant en 2èeme année de BTS SIO option SLAM, nous avons effectue un projet en 
 
 # Installation de projet et Démarage
 
-Requis : composer
+Requis : 
+composer
+Dans php.ini : décommentez ces lignes 
+
+extension=fileinfo
+extension=gd
+extension=mbstring
 
 1) Téléchargez le projet
 2) Dans le CMD:
@@ -36,3 +42,8 @@ Requis : composer
 
 # Documentation supplémentaires
 Nous avons un Guide utilisateur,un dossier spécification technique et un autre dossier fonctionelle.
+
+[guide_utilisateur_gestion_licence.pdf](https://github.com/user-attachments/files/27116112/guide_utilisateur_gestion_licence.pdf)
+[dossier_specifications_techniques_gestion_licence.pdf](https://github.com/user-attachments/files/27116117/dossier_specifications_techniques_gestion_licence.pdf)
+[dossier_specification_fonctionnelles_gestion_licence.pdf](https://github.com/user-attachments/files/27116123/dossier_specification_fonctionnelles_gestion_licence.pdf)
+
