@@ -40,6 +40,7 @@ durée : Du 5 janvier 2026 au 28 février 2026
 
 Requis : 
 composer
+php 8.2
 Dans php.ini : décommentez ces lignes 
 
 extension=fileinfo
@@ -63,4 +64,13 @@ Nous avons un Guide utilisateur,un dossier spécification technique et un autre 
 [guide_utilisateur_gestion_licence.pdf](https://github.com/user-attachments/files/27116112/guide_utilisateur_gestion_licence.pdf)
 [dossier_specifications_techniques_gestion_licence.pdf](https://github.com/user-attachments/files/27116117/dossier_specifications_techniques_gestion_licence.pdf)
 [dossier_specification_fonctionnelles_gestion_licence.pdf](https://github.com/user-attachments/files/27116123/dossier_specification_fonctionnelles_gestion_licence.pdf)
+
+# Lien figma maquette
+
+https://www.figma.com/design/hcKlxnQhmV2ErZ4n2qUae2/Enseignement-sup%C3%A9rieur?node-id=0-1&p=f&t=GSqte5aNuHskdq6d-0
+
+# Cahier des Charges
+
+[cahier_des_charges_gestion_licence.pdf](https://github.com/user-attachments/files/27117180/cahier_des_charges_gestion_licence.pdf)
+
 
