@@ -40,12 +40,13 @@ durée : Du 5 janvier 2026 au 28 février 2026
 
 Requis : 
 composer
-php 8.2
-Dans php.ini : décommentez ces lignes 
 
-extension=fileinfo
-extension=gd
-extension=mbstring
+php 8.2
+
+Dans php.ini : décommentez ces lignes 
+- extension=fileinfo
+- extension=gd
+- extension=mbstring
 
 1) Téléchargez le projet
 2) Dans le CMD:
