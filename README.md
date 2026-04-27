@@ -30,6 +30,11 @@ durée : Du 5 janvier 2026 au 28 février 2026
 - Tailwing
 - JavaScript
 - PHP
+- CSS
+
+# Bibliothèque
+- FullCalendar
+- Phpspreadsheet
 
 # Installation de projet et Démarage
 
