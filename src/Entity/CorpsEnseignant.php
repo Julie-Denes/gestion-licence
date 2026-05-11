@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\Indisponibilite;
 
 #[ORM\Entity]
 class CorpsEnseignant
@@ -29,6 +30,9 @@ class CorpsEnseignant
 
     #[ORM\ManyToMany(targetEntity: Intervention::class, mappedBy: 'corpsEnseignants')]
     private Collection $interventions;
+
+    #[ORM\OneToMany(mappedBy: 'corpsEnseignant', targetEntity: Indisponibilite::class, orphanRemoval: true)]
+    private Collection $indisponibilites;
 
 
     public function getId(): ?int
@@ -91,8 +95,41 @@ class CorpsEnseignant
     {
         $this->modules = new ArrayCollection();
         $this->interventions = new ArrayCollection();
+        $this->indisponibilites = new ArrayCollection();
     }
 
+    /**
+ * @return Collection<int, Indisponibilite>
+ */
+    public function getIndisponibilites(): Collection
+    {
+        return $this->indisponibilites;
+    }
+
+    public function addIndisponibilite(Indisponibilite $indisponibilite): self
+    {
+        if (!$this->indisponibilites->contains($indisponibilite)) {
+
+            $this->indisponibilites->add($indisponibilite);
+
+            $indisponibilite->setCorpsEnseignant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIndisponibilite(Indisponibilite $indisponibilite): self
+    {
+        if ($this->indisponibilites->removeElement($indisponibilite)) {
+
+            if ($indisponibilite->getCorpsEnseignant() === $this) {
+
+                $indisponibilite->setCorpsEnseignant(null);
+            }
+        }
+
+        return $this;
+    }
     /**
     * @return Collection<int, Module>
     */

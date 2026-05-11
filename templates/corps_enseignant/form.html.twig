@@ -107,6 +107,74 @@
         {% else %}
             <p class="text-muted">Aucune intervention associée à cet enseignant.</p>
         {% endif %}
+        <hr>
+
+            <h3>Ajouter une indisponibilité</h3>
+
+            {{ form_start(formIndispo) }}
+
+                {{ form_row(formIndispo.titre) }}
+
+                {{ form_row(formIndispo.dateDebut) }}
+
+                {{ form_row(formIndispo.dateFin) }}
+
+                <button class="btn btn-warning">
+                    Ajouter l'indisponibilité
+                </button>
+
+            {{ form_end(formIndispo) }}
+            <hr>
+
+        <h3>Liste des indisponibilités</h3>
+
+        {% if indisponibilites is not empty %}
+
+            <table class="table table-bordered table-striped">
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>Titre</th>
+                        <th>Date début</th>
+                        <th>Date fin</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for indispo in indisponibilites %}
+
+                        <tr>
+
+                            <td>
+                                {{ indispo.titre ?: 'Sans titre' }}
+                            </td>
+
+                            <td>
+                                {{ indispo.dateDebut|date('d/m/Y H:i') }}
+                            </td>
+
+                            <td>
+                                {{ indispo.dateFin|date('d/m/Y H:i') }}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% else %}
+
+            <p class="text-muted">
+                Aucune indisponibilité.
+            </p>
+
+        {% endif %}
             <hr>
             <form method="post"
                   action="{{ path('corps_enseignant_delete', {'id': form.vars.value.id}) }}"

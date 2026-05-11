@@ -16,6 +16,10 @@ use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
+use App\Entity\Indisponibilite;
+use App\Form\IndisponibiliteType;
+
+
 #[Route('/corps-enseignant', name: 'corps_enseignant_')]
 class CorpsEnseignantController extends AbstractController
 {
@@ -59,28 +63,108 @@ class CorpsEnseignantController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit')]
-    public function edit(CorpsEnseignant $corpsEnseignant, Request $request, CorpsEnseignantRepository $corpsEnseignantRepository): Response
-    {
-        $form = $this->createForm(CorpsEnseignantType::class, $corpsEnseignant);
+public function edit(
+    CorpsEnseignant $corpsEnseignant,
+    Request $request,
+    CorpsEnseignantRepository $corpsEnseignantRepository,
+    EntityManagerInterface $entityManager
+): Response {
 
-        $form->handleRequest($request);
+    // FORMULAIRE ENSEIGNANT
+    $form = $this->createForm(
+        CorpsEnseignantType::class,
+        $corpsEnseignant
+    );
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $corpsEnseignantRepository->save($corpsEnseignant, true);
+    $form->handleRequest($request);
 
-            $this->addFlash('success', 'Enseignant modifié avec succès !');
+    if ($form->isSubmitted() && $form->isValid()) {
 
-            return $this->redirectToRoute('corps_enseignant_list');
-        }
+        $corpsEnseignantRepository->save(
+            $corpsEnseignant,
+            true
+        );
 
-        $interventions = $corpsEnseignant->getInterventions();
+        $this->addFlash(
+            'success',
+            'Enseignant modifié avec succès !'
+        );
 
-        return $this->render('corps_enseignant/form.html.twig', [
-            'form' => $form->createView(),
-            'editMode' => true,
-            'interventions' => $interventions,
-        ]);
+        return $this->redirectToRoute(
+            'corps_enseignant_list'
+        );
     }
+
+    // FORMULAIRE INDISPONIBILITE
+    $indisponibilite = new Indisponibilite();
+
+    $formIndispo = $this->createForm(
+        IndisponibiliteType::class,
+        $indisponibilite
+    );
+
+    $formIndispo->handleRequest($request);
+
+    if (
+        $formIndispo->isSubmitted()
+        && $formIndispo->isValid()
+    ) {
+
+        if (
+            $indisponibilite->getDateFin()
+            <=
+            $indisponibilite->getDateDebut()
+        ) {
+
+            $this->addFlash(
+                'danger',
+                'La date de fin doit être après la date de début.'
+            );
+
+        } else {
+
+            $indisponibilite->setCorpsEnseignant(
+                $corpsEnseignant
+            );
+
+            $entityManager->persist(
+                $indisponibilite
+            );
+
+            $entityManager->flush();
+
+            $this->addFlash(
+                'success',
+                'Indisponibilité ajoutée.'
+            );
+
+            return $this->redirectToRoute(
+                'corps_enseignant_edit',
+                [
+                    'id' => $corpsEnseignant->getId()
+                ]
+            );
+        }
+    }
+
+    return $this->render(
+        'corps_enseignant/form.html.twig',
+        [
+            'form' => $form->createView(),
+
+            'formIndispo' =>
+                $formIndispo->createView(),
+
+            'editMode' => true,
+
+            'interventions' =>
+                $corpsEnseignant->getInterventions(),
+
+            'indisponibilites' =>
+                $corpsEnseignant->getIndisponibilites(),
+        ]
+    );
+}
 
     #[Route('/delete/{id}', name: 'delete', methods: ['POST'])]
     public function delete(CorpsEnseignant $corpsEnseignant, CorpsEnseignantRepository $corpsEnseignantRepository, Request $request): Response
